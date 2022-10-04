@@ -1,0 +1,59 @@
+.accept-form{
+    min-height: 80vh;
+    width: 100%;
+}
+.request-requirements{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 10px;
+    width: 60%;
+}
+.choose-volunteers-number, .choose-materials{
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 50%;
+    height: 35vh;
+}
+.choose-volunteers-number {
+    height: 20vh;
+}
+.choose-volunteers-number .form, .choose-materials{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-items: center;
+    
+}
+.choose-volunteers-number .form input{
+    margin: 10px;
+    width: 80%;
+}
+.choose-materials input{
+    width: 80%;
+}
+.choose-materials {
+    width: 100%;
+}
+.choose-materials div{
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+}
+.requested-volunteers{
+    padding: 20px;
+    border-bottom: 0.1rem solid rgba(216, 216, 216, 0.664);
+    width: 100%;
+}
+.requested-volunteers span{
+    color: rgb(0, 225, 255);
+    margin-left: 10px;
+}
+.btn-done{
+    width: 80%;
+}
+.btn-done input{
+    float: right;
+}

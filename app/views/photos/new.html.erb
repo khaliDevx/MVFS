@@ -1,0 +1,142 @@
+ <%= stylesheet_link_tag 'new_photo'%>
+ <%= stylesheet_link_tag 'profile_personaly'%>
+
+
+<style>
+</style>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<body>
+  <header class= ' chatbar'>
+    <div class=header>
+      <a class=skip href="/log" >
+        <span>Skip </span>
+        <i class="fas fa-fast-forward"></i>
+      <a>
+    <div>
+  </header>
+  <div class="container">
+    <div class="main-body">
+      <div class="row gutters-sm">
+        <div class="col-md-4 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex flex-column align-items-center text-center">
+                  <%if @photos= Photo.where(:user_id=>session[:user_id]).present?%>
+                        <%ph = Photo.find_by(:user_id=>session[:user_id])%>
+                      <%@photos= Photo.where(:user_id=>session[:user_id])%>
+                        <%=image_tag(ph.image,class:"rounded-circle", width:"150")%> 
+                        <%= form_for( @photo , remote: true) do |form| %>
+                            <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                            <%= form.hidden_field(:user_id, value:session[:user_id]) %>
+                            <%=form.label :image do%>
+                                <span style="display:none;">
+                                <%= form.file_field :image,class: 'form-control' %>
+                                </span>
+                                    <%# <div class='btn-camera btn btn-primary btn-sm' >
+                                        <%# <i class="fa-solid fa-camera"></i>  %>
+                                    <%# </div>  %>
+                            <%end%>
+                      
+                            <div class="mt-3">
+                                <%@user = User.find_by(:id=>session[:user_id])%>
+                                    <h4><%= @user.first_name%> <%= @user.last_name%></h4>
+                                    <%# <input type=submit class="btn btn-outline-primary"value=Add> %>
+                                <% end %>
+                        
+                    <%else%>
+                        <%=image_tag('avatar.png',class:"rounded-circle", width:"150")%> 
+                        <%= form_for( @photo , remote: true) do |form| %>
+                            <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+
+                            <%= form.hidden_field(:user_id, value:session[:user_id]) %>
+                            <%=form.label :image do%>
+                                <span style="display:none;">
+                                <%= form.file_field :image,class: 'form-control' %>
+                                </span>
+                                    <div class='btn-camera btn btn-primary btn-sm' >
+                                        <i class="fa-solid fa-camera"></i> 
+                                    </div>
+                            <%end%>
+                      
+                <div class="mt-3">
+                    <%@user = User.find_by(:id=>session[:user_id])%>
+                      <h4><%= @user.first_name%> <%= @user.last_name%></h4>
+                      <input type=submit id=photo class="btn btn-outline-primary"value=Add>
+                      
+                          <% end %>
+                        <%end%>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Full Name</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <%@user = User.find_by(:id=>session[:user_id])%>
+                <%=@user.first_name%> <%=@user.last_name%>
+              </div>
+            </div>
+            <hr>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Phone</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <%=@user.phone%>
+              </div>
+            </div>
+            <hr>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Address</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <% city = City.find_by(:id=>@user.city_id)%>
+                <% go = Governorate.find_by(:id=>city.governorate_id)%>
+                <%= go.name%>-<%= city.name%>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Bio</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <form action=/bio method=POST>
+                  <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                  <input type=hidden name=bio[id] value=<%=@user.id%>>
+                  <textarea  name=bio[bio] class="form-control"placeholder="<%=@user.bio%>" value=></textarea>
+              </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <button class="btn btn-outline-primary">Add</button>
+
+                    </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <script>
+    $('#photo').click(function(){
+      $('#photo').hide()
+    });
+  </script>
+   
+</body>
+

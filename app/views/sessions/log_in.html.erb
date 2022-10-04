@@ -1,0 +1,81 @@
+
+<%= stylesheet_link_tag 'sessions'%>
+<div class="body-sessions">
+    <div class="greet">
+        <h1>Hi <span> Volunteer</span>!</h1>
+        <h2>Welcome back to <span>FixIt</span>.</h2>
+        <h3>To continue, please sign in to your account</h3>
+    </div>
+    <div class="card shadow-lg o-hidden border-0 my-4">
+        <div class="card-body">
+                <%=image_tag("fixit.jpg", :class => "fixit-logo")%>
+
+                <div class="text-center">
+                    <h4 class="text-dark mb-4">Login</h4>
+                </div>
+                <form class="user needs-validation" action="/login" method="POST" novalidate>
+                    <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+
+                    <div class="mb-3">
+                        <input class="form-control" type="text"
+                            aria-describedby="emailHelp" placeholder="Enter Email Address..."
+                            name="login[username]" autocomplete="off" required>
+                            <div class="invalid-feedback">
+                                please enter your username!
+                            </div>
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control" type="password"
+                            placeholder="Password" name="login[password]" required>
+                            <div class="invalid-feedback">
+                                please choose a username!
+                            </div>
+                    </div>
+                    <!-- <div class="mb-3">
+                        <div class="custom-control custom-checkbox small">
+                            <div class="form-check">
+                                <input class="form-check-input custom-control-input" type="checkbox"
+                                    id="formCheck-1">
+                                <label class="form-check-label custom-control-label" for="formCheck-1">Remember Me</label>
+                            </div>
+                        </div>
+                    </div> -->
+                    <button class="btn btn-primary d-block btn-user w-50" type="submit">Login</button>
+                    <hr>
+                </form>
+                <div class="text-center">
+                    <%# <a class="small" href="forgot-password.html">Forgot Password?</a> %>
+                </div>
+                <div class="text-center">
+                    <a class="small" href="/new">Create an Account!</a>
+                </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+    $(".register").click(function(){
+        if($(".pass").val() != $(".pass2").val()){
+            $(".pass2error").val("passwords not match!")
+        }
+    })
+})()
+</script>

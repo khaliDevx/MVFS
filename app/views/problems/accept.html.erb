@@ -1,0 +1,99 @@
+<%= stylesheet_link_tag 'accept' %>
+<div class="accept-form shadow-sm p-3 mb-5 bg-white rounded">
+  <div class="request-requirements">
+    <div class="choose-volunteers-number">
+        <div> 
+        <% if @accept.present?%>
+        <%@id=@accept.id%>
+        <%end %>
+          <% if @accept.present?%>
+            <% accept = Accept.find_by(:user_id=> session[:user_id],:in_progress=>true)%>
+            <%# <%  @problem = Problem.find_by(:id=>accept.problem_id) %> 
+            <div class="requested-volunteers">
+              <%= @accept.required_volunteer%> <span class="h6"> volunteers requested</span>
+            </div>
+          <% else %>
+              <div>Number of needed volunteers:</div>
+              <%= form_tag({:controller=>'problems',:action=>'accept_issue'},:remote=> true, :local=> true, html: {:id => "post-com" },method: :post, :class => "form") do %>
+                <input class="form-control" type=number name=accept[required_volunteer] min="0">
+                <%= hidden_field_tag(:problem_id, params[:problem_id],value:@problem.id) %>
+                <input type=submit class='btn btn-outline-info' id='num-volu' value=Request>
+              <% end %>
+          <% end %>
+        </div>
+    </div>
+    
+    <div>
+      <% @cat = Category.find_by(:id=>@problem.id)%>
+      <%= form_tag({:controller=>'problems',:action=>'accept_mat'},
+        :remote=> true, :local=> true, html: {:id => "post-com" },method: :post, :class => "choose-materials" ) do %>
+        <%= select_tag(:material_id,options_from_collection_for_select(
+          Material.where(:category_id=>@problem.category_id).order(:name),
+          :id, :name,params[:material_id]),class:"form-select", include_blank: "Choose the material?") %>
+        <div>
+          <label>cost:</label>
+          <input class= "form-control" type=number name=acce_matt[cost] min="1">
+        </div>
+        <%= hidden_field_tag(:problem_id, params[:problem_id],value:@problem.id) %>
+        <div>
+          <label>Quantity:</label>
+          <input class="form-control" type=number name=acce_matt[quantity] min="1">
+        </div>
+        <input type=submit class='btn btn-outline-info' value=Request>
+      <% end %>
+    </div>
+  </div>
+  <div >
+      <%= form_tag({:controller=>'problems',:action=>'done'},:remote=> true, :local=> true, html: {:id => "post-com" },method: :post, :class=>"btn-done") do %>
+        <input type=hidden name=myacc[user_id] value=<%=session[:user_id]%>>
+        <input type=hidden name=myacc[problem_id] value="<%= @problem.id%>">
+        <input type=submit class='btn btn-outline-info' value=Done>
+      <% end %>
+    <div>
+    <div>
+      <div>Materials:</div>
+      <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <td class="text-center">Name</td>
+            <td class="text-center">Cost</td>
+            <td class="text-center">Quantity</td>
+            <td class="text-center">Total</td>
+            <%# <td class="text-center"></td> %>
+            <%# <td><button class="btn btn-md btn-primary" id="addBtn" type="button">+</button></td> %>
+          </tr>
+        </thead>
+        <tbody >
+          <% if @accept.present?%>
+              <% billofmat = BillOfMaterial.where(:accept_id=>@id) %>
+              <% billofmat.each do |bill|%>
+                <tr>
+                  <% mat = Material.find_by(:id=> bill.material_id)%>
+                  <td class="row-index text-center">
+                    <%= mat.name%>
+                  </td>
+                  <td class="row-index text-center">
+                    <%= bill.cost%>
+                  </td>
+                  <td class="row-index text-center">
+                    <%= bill.quantity%>
+                  </td>
+                  <%totale_cost=0%>
+                  <td class="row-index text-center"><%= totale_cost=bill.cost*bill.quantity%></td> 
+                </tr>
+              <% end %>
+          <% end %>
+          </tbody>
+      </table>
+        <% if @accept.present?%>
+       
+        <div class="row-index text-center">
+            total cost: <%= Accept.find_by(:id=>@id).totale_cost%>
+        </div>
+      <% end %>
+      </div>
+    </div>
+
+    
+</div>

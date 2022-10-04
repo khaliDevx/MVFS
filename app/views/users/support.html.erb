@@ -1,0 +1,100 @@
+
+ <%= stylesheet_link_tag 'join'%>
+<style>
+.model-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,.3);
+
+    transform: scale(1);
+}
+</style>
+
+<div class="model-container">
+                    <% accept = Accept.find_by(:problem_id => @problem.id )%>
+
+                        <div class="model">
+                            <i class="fas fa-home"></i>
+                            <h3>support Box</h3>
+                            <% @user.each do |user| %>
+                                <p>welcome <%=user.first_name%> </p>
+                                <h3>choos what you want to support</h3>
+                                <div class=main>
+                                  <button id=ass class=off>Money</button>
+                                  <button id=on class=on>Matt</button>
+                                </div>
+                                <div class=money>
+                                    <form action=/money method=POST>
+                                      <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                                      <input type=hidden name=money[user_id] value=<%= user.id%>>
+                                      <input type=hidden name= money[problem_id] value=<%= @problem.id%>>
+                                      <input type=number name=money[amount] class="sel ">
+                                      <select class="sel" name=money[money_type_id]>
+                                        <option><option>
+                                        <% @money.each do |mo| %>
+                                            <option value= <%= mo.id %>><%= mo.coins %><option>
+                                        <% end %>
+                                      </select>
+                                         <button class="btn-money">Support</button>
+                                    </form>
+                                </div>
+                                <div class="matt">
+                                   <form action=/supmat method=POST>
+                                      <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                                      <input type=hidden name=supmat[user_id] value=<%= user.id%>>
+                                      <input type=hidden name= supmat[problem_id] value=<%= @problem.id%>>
+                                     <select class="form-control w-50" name=supmat[material_id]>
+                                       <%billof = BillOfMaterial.where(:accept_id=>accept.id)%>
+                                       <% billof.each do |bill|%>
+                                            <% @mat = Material.where(:id=>bill.material_id)%>
+                                            <% @mat.each do |mat| %>
+                                             <option value=<%=mat.id%>><%= mat.name %></option>
+                                            <% end %>
+                                        <% end %>
+                                     </select>
+                                     <input type=number class="form-control w-50" name=supmat[quantity]>
+                                     <button >Support</button>
+                                   </form>
+                                 </div>
+                            <% end %>
+                             <a href="/accept_status"> <i class="fas fa-times close"></i></a>
+                        </div>
+                    </div>
+
+                     <script>
+        $(function(){
+    $('#support').click(function(){
+    $('.model-container').delay(2000).css('transform',' scale(1)')
+    });
+    // $('body').on('click','.close',function(){
+    //     $('.model-container').css('transform',' scale(0)')
+    //     });
+});
+$('.off').click(function(){
+          $('.matt').hide()
+          $('.money').show()
+          $('.off').delay(2000).css('background','#fff')
+          $('.on').delay(2000).css('background','#4d90fe')
+
+        });
+$('.on').click(function(){
+  $('.matt').show()
+  $('.money').hide()
+  $('.on').delay(5000).css('background','#fff')
+  $('.off').delay(5000).css('background','#4d90fe')
+
+
+});
+// const modal =doucment.querySelectorAll('#support')
+//     $('#support').click(function(){
+//         $('.model-container').delay(2000).css('transform',' scale(1)')
+//     });
+
+
+    </script>

@@ -1,0 +1,157 @@
+
+<style>
+    .avatar {
+    vertical-align: middle;
+    width: 225px;
+    height: 225px;
+    border-radius: 50%;
+  }
+  @media
+    only screen 
+    and (max-width: 760px), (min-device-width: 768px) 
+    and (max-device-width: 1024px) {
+        .avatar {
+            width: 130px;
+            height: 130px;
+        }
+    }
+</style>
+            
+<% @user.each do |user| %>
+    <h3 class="text-dark mb-4">Edit Profile</h3>
+    <div class="row mb-3">
+        <div class="col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body text-center shadow">
+                <%if @photos= Photo.where(:user_id=>user.id).present?%>
+                        <%@photos= Photo.where(:user_id=>user.id)%>
+                        <% @photos.each do |photo| %>
+                            <% if (photo.image.attached?) %>
+                                <%=image_tag(url_for(photo.image),:id=>"frame", :class=>"img-preview avatar", :name=>"image")%>
+                            <% else %>
+                            <%=image_tag('avatar.png',class:'avatar')%> 
+                            <% end %>
+                            <% end %>
+                    <% else %>
+                    <%@photo=Photo.new%>
+                        <%=image_tag('avatar.png',class:'avatar')%> 
+                    <% end %>
+                        <div class="mb-3">
+                        <%= form_for( @photo , remote: true) do |form| %>
+                            <%=form.label :image do%>
+                                <div class= 'form-control'>
+                                    <i class="fa-solid fa-camera"></i> 
+                                </div>                                      
+                                <span style="display:none;">
+                                <div class="form-label custom-file-input" id="formFile" onchange="preview()">
+                                    <%= form.file_field :image,class: 'form-control' %>
+                                </div>
+                                </span>
+                            <%end%>
+                            <%= form.hidden_field(:user_id, value:session[:user_id]) %>
+                            <input class="btn btn-primary btn-sm" type="submit" value="Change Photo">
+                        <% end %>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col">
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">User Settings</p>
+                        </div>
+                        <div class="card-body">
+                            <form action="/edit_user" method="POST">
+                                <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                                <input type='hidden' name='edit_user[id]' value="<%= user.id%>">
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3"><label class="form-label"
+                                                for="username"><strong>Username</strong></label><input
+                                                class="form-control" type="text" id="username"
+                                                placeholder="username" name="edit_user[username]" value=<%=user.username%>></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3"><label class="form-label"for="first_name">
+                                                <strong>FirstName</strong>
+                                            </label>
+                                            <input id="first_name"class="form-control" type="text"placeholder="first name" name="edit_user[first_name]" value=<%=user.first_name%>>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3"><label class="form-label"
+                                                for="last_name"><strong>Last Name</strong></label><input
+                                                id="last_name" class="form-control" type="text"
+                                                placeholder="last name" name="edit_user[last_name]" value=<%=user.last_name%>></div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3"><label class="form-label"for="last_name"><strong>Phon Numbere</strong></label>
+                                        <input id="last_name" class="form-control" type="number"placeholder="Phone Number" name="edit_user[phone]" value=<%=user.phone%>></div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3"><label class="form-label"for="last_name"><strong>Bio</strong></label>
+                                            <%=text_area_tag(:bio,params[:bio], class:"form-control",value:user.bio) %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3"><button class="btn btn-primary btn-sm"
+                                        type="submit">Save Settings</button></div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Your Location</p>
+                        </div>
+                        <div class="card-body">
+                            <form action="/upprofile" method="POST">
+                                <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <strong>State</strong>
+                                    </label>
+                                    <select id="address" class="form-control" type="text" placeholder="State"name="">
+                                        <%your_city=City.where(:id=>user.city_id)%>
+                                        <% your_city.each do |ct| %>
+                                        <%your_state=Governorate.where(:id=>ct.governorate_id)%>
+                                        <% your_state.each do |go| %>
+                                            <option><%=go.name%></option>
+                                        <% end %>
+                                        <% end %>
+                                        <% @gover.each do |go| %>
+                                            <option value="<%= go.id%>"><%=go.name%></option>
+                                        <% end %>
+                                    </select>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3"><label class="form-label"
+                                            for="city"><strong>City</strong></label> 
+                                            <select id="city"class="form-control" type="text" placeholder=""name="upprofile[city_id]" >
+                                                <% your_city.each do |ct| %>
+                                                <option><%=ct.name%></option>
+                                                    <% end %>
+                                                <% @city.each do |ct| %>
+                                                    <option value="<%=ct.id%>"> <%=ct.name%></option>
+                                                <% end %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <button class="btn btn-primary btn-sm" type="submit">Save&nbsp;Settings</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<%end%>
+
+        </div><a class="border rounded d-inline scroll-to-top" href="page-top"><i class="fas fa-angle-up"></i></a>

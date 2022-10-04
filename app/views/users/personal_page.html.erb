@@ -1,0 +1,304 @@
+ <%= stylesheet_link_tag 'personal_page'%>
+<header>
+	<div class="container">
+		<div class="profile">
+            <%@users.each do |user|%>
+				<div class="profile-name-photo">
+					<div class="profile-image">
+						<%if @photos= Photo.where(:user_id=>user.id).present?%>
+							<%@photos= Photo.where(:user_id=>user.id)%>
+							<% @photos.each do |photo| %>
+								<% if (photo.image.attached?) %>
+									<%=image_tag(url_for(photo.image),class:'avatar')%>
+								<% else %>
+									<%=image_tag('avatar.png',class:'avatar')%> 
+								<% end %>
+							<% end %>
+						<% else %>
+							<%=image_tag('avatar.png',class:'avatar')%> 
+						<% end %>
+					</div>
+					<div class="name-bio">
+						<div class="profile-user-name h3"><%=user.first_name%> <%=user.last_name%></div>
+						<p class="profile-bio">
+							<%=user.bio%>
+						</p>
+					</div>
+				</div>
+					
+                <%@problems= Problem.where(:user_id=>user.id)%>
+				<div class="profile-info">
+					<div class="profile-user-settings">
+						<div>
+							<a href='/profile'>
+								<button class="btn profile-edit-btn">Edit Profile</button>
+							</a>
+							<%if user.id==session[:user_id]%>
+							<% if user.accountstatu==true%>
+								<button class="btn profile-edit-btn" disabled>Active</button>
+							<% else%>
+								<button class="btn profile-edit-btn" disabled>Blocked</button>
+							<% end %>
+							
+							<%elsif @employee.present?%>
+								<br>
+								<button class="btn profile-edit-btn btn-danger w-50"><%= link_to 'Destroy' , user,method: :delete, data: {confirm: 'Are you sure?'}%></button>
+								<% if user.accountstatu==true %>
+									<form action='/block'method='POST'>
+										<input type='hidden'name='authenticity_token'value="<%= form_authenticity_token%>">
+										<input type='hidden'name='block[accountstatu]'value=false>
+										<input type='hidden'name='block[id]'value=<%=user.id%>>
+										<input type=submit value=Block class="btn profile-edit-btn btn-warning w-50">
+									</form>
+								<% else %>
+									<form action='/active'method='POST'>
+										<input type='hidden'name='authenticity_token'value="<%= form_authenticity_token%>">
+										<input type='hidden'name='active[accountstatu]'value=true>
+										<input type='hidden'name='active[id]'value=<%=user.id%>>
+										<input type=submit value=Activate class="btn profile-edit-btn btn-success ">
+									</form>
+								<% end %>
+							<%end%>
+						</div>
+					</div>
+					<div class="profile-stats">
+						<ul>
+							<li><span class="profile-stat-count"><%=Problem.where(:user_id=>user.id).count%></span> Submitted</li>
+							<li><span class="profile-stat-count"><%=Accept.where(:user_id=>user.id).count%></span> Accepted</li>
+							<li><span class="profile-stat-count"><%= JoinIssue.where(:user_id=>user.id).count%></span> Joined</li>
+							<li><span class="profile-stat-count"><%=FixedIssue.where(:user_id=>user.id).count%></span> Fixed</li>
+						</ul>
+					</div>
+					
+				</div>
+		</div>
+			
+		<!-- End of profile section -->
+
+	</div>
+	<!-- End of container -->
+
+</header>
+
+<main>
+
+	<div class="container">
+		<nav class="issuesnavbar">
+			<button class="btn btn2" id="all">All</button>
+			<button class="btn btn2" id="supmitted">Supmitted</button>
+			<button class="btn btn2" id="joined">Joined</button>
+			<button class="btn btn2" id="fixed">Fixed</button>
+			<button class="btn btn2" id="supported">Supported</button>
+		</nav>
+		<div class="gallery">
+			<div class="row issues" id="all-issues">
+				<%@problems.each do |problem|%>
+					<div class="gallery-item" tabindex="0">
+						<%=image_tag(problem.image,class:"gallery-image")%>
+						<div class="gallery-item-info">
+							<ul>
+								<li class="gallery-item-likes"><span class="visually-hidden">Confirm:</span><i class="far fa-thumbs-up" aria-hidden="true"></i><%=Confirm.where(:problem_id=>problem.id).count%></li>
+								<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> <%=Coment.where(:problem_id=>problem.id).count%></li>
+								<li class="gallery-item-comments"><span class="visually-hidden">Status:</span><i class="fas fa-info-circle" aria-hidden="true"></i> <%=problem.status%></li>
+								<%this_user = User.find_by(:id=> session[:user_id])%>
+								<% if this_user.id==problem.user_id%>
+									<% if problem.status=='Submitted'%>
+										<li class="gallery-item-comments"><span class="visually-hidden">Issue:</span><i class="fas fa-camera" aria-hidden="true"><%= link_to 'Show', problem%></i> </li>
+									<% end %>
+								<% end %>
+							</ul>
+						</div>
+					</div>
+				<%end%>
+				<% @fixed = FixedIssue.where(:user_id=>user.id)%>
+				<%@fixed.each do |fix|%>
+					<%@reformer = Problem.where(:id=>fix.problem_id)%>
+					<%@reformer.each do |issue|%>
+						<div class="gallery-item" tabindex="0">
+								<%=image_tag(issue.image,class:"gallery-image")%>
+								<div class="gallery-item-info">
+									<ul>
+										<li class="gallery-item-likes"><span class="visually-hidden">Confirm:</span><i class="far fa-thumbs-up" aria-hidden="true"></i><%=Confirm.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> <%=Coment.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Status:</span><i class="fas fa-info-circle" aria-hidden="true"></i> <%=issue.status%></li>
+										<%this_user = User.find_by(:id=> session[:user_id])%>
+										<% if this_user.id==issue.user_id%>
+											<% if issue.status=='Submitted'%>
+												<li class="gallery-item-comments"><span class="visually-hidden">Issue:</span><i class="fas fa-camera" aria-hidden="true"><%= link_to 'Show', problem%></i> </li>
+											<% end %>
+										<% end %>
+									</ul>
+								</div>
+							</div>
+					<% end %>
+				<% end %>
+				<% @join = JoinIssue.where(:user_id=>user.id)%>
+				<% @join.each do |join|%>
+					<%@joiner = Problem.where(:id=>join.problem_id)%>
+					<%@joiner.each do |issue|%>
+						<div class="gallery-item" tabindex="0">
+								<%=image_tag(issue.image,class:"gallery-image")%>
+								<div class="gallery-item-info">
+									<ul>
+										<li class="gallery-item-likes"><span class="visually-hidden">Confirm:</span><i class="far fa-thumbs-up" aria-hidden="true"></i><%=Confirm.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> <%=Coment.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Status:</span><i class="fas fa-info-circle" aria-hidden="true"></i> <%=issue.status%></li>
+										<%this_user = User.find_by(:id=> session[:user_id])%>
+										<% if this_user.id==issue.user_id%>
+											<% if issue.status=='Submitted'%>
+												<li class="gallery-item-comments"><span class="visually-hidden">Issue:</span><i class="fas fa-camera" aria-hidden="true"><%= link_to 'Show', problem%></i> </li>
+											<% end %>
+										<% end %>
+									</ul>
+								</div>
+							</div>
+					<% end %>
+				<% end %>
+			</div>
+			<div class="row issues" id="submitted-issues">
+				<%@problems.each do |problem|%>
+						<div class="gallery-item" tabindex="0">
+							<%=image_tag(problem.image,class:"gallery-image")%>
+							<div class="gallery-item-info">
+								<ul>
+									<li class="gallery-item-likes"><span class="visually-hidden">Confirm:</span><i class="far fa-thumbs-up" aria-hidden="true"></i><%=Confirm.where(:problem_id=>problem.id).count%></li>
+									<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> <%=Coment.where(:problem_id=>problem.id).count%></li>
+									<li class="gallery-item-comments"><span class="visually-hidden">Status:</span><i class="fas fa-info-circle" aria-hidden="true"></i> <%=problem.status%></li>
+									<%this_user = User.find_by(:id=> session[:user_id])%>
+									<% if this_user.id==problem.user_id%>
+										<% if problem.status=='Submitted'%>
+											<li class="gallery-item-comments"><span class="visually-hidden">Issue:</span><i class="fas fa-camera" aria-hidden="true"><%= link_to 'Show', problem%></i> </li>
+										<% end %>
+									<% end %>
+								</ul>
+							</div>
+						</div>
+				<%end%>
+			</div>
+			<div class="row issues" id="joined-issues">
+				<% @join = JoinIssue.where(:user_id=>user.id)%>
+				<% @join.each do |join|%>
+					<%@joiner = Problem.where(:id=>join.problem_id)%>
+					<%@joiner.each do |issue|%>
+						<div class="gallery-item" tabindex="0">
+								<%=image_tag(issue.image,class:"gallery-image")%>
+								<div class="gallery-item-info">
+									<ul>
+										<li class="gallery-item-likes"><span class="visually-hidden">Confirm:</span><i class="far fa-thumbs-up" aria-hidden="true"></i><%=Confirm.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> <%=Coment.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Status:</span><i class="fas fa-info-circle" aria-hidden="true"></i> <%=issue.status%></li>
+										<%this_user = User.find_by(:id=> session[:user_id])%>
+										<% if this_user.id==issue.user_id%>
+											<% if issue.status=='Submitted'%>
+												<li class="gallery-item-comments"><span class="visually-hidden">Issue:</span><i class="fas fa-camera" aria-hidden="true"><%= link_to 'Show', problem%></i> </li>
+											<% end %>
+										<% end %>
+									</ul>
+								</div>
+							</div>
+					<% end %>
+				<% end %>
+			</div>
+			<div class="row issues" id="fixed-issues">
+				<% @fixed = FixedIssue.where(:user_id=>user.id)%>
+				<%@fixed.each do |fix|%>
+					<%@reformer = Problem.where(:id=>fix.problem_id)%>
+					<%@reformer.each do |issue|%>
+						<div class="gallery-item" tabindex="0">
+								<%=image_tag(issue.image,class:"gallery-image")%>
+								<div class="gallery-item-info">
+									<ul>
+										<li class="gallery-item-likes"><span class="visually-hidden">Confirm:</span><i class="far fa-thumbs-up" aria-hidden="true"></i><%=Confirm.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> <%=Coment.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Status:</span><i class="fas fa-info-circle" aria-hidden="true"></i> <%=issue.status%></li>
+										<%this_user = User.find_by(:id=> session[:user_id])%>
+										<% if this_user.id==issue.user_id%>
+											<% if issue.status=='Submitted'%>
+												<li class="gallery-item-comments"><span class="visually-hidden">Issue:</span><i class="fas fa-camera" aria-hidden="true"><%= link_to 'Show', problem%></i> </li>
+											<% end %>
+										<% end %>
+									</ul>
+								</div>
+							</div>
+					<% end %>
+				<% end %>
+			</div>
+			<div class="row issues" id="supported-issues">
+				<%@supporter_money = AcceptMoney.where(:sup_id=>user.id)%>
+				<%@supporter_money.each do |supp|%>
+					<%@money= supp.problem_id%>
+				<% end %>
+				<% @money%>
+				<%@supporter_mat = AcceptMat.where(:sup_id=>user.id)%>
+				
+				<%@supp = Problem.where(:id=>@money) %>
+					<% @supp.each do |issue|%>
+						<div class="gallery-item" tabindex="0">
+								<%=image_tag(issue.image,class:"gallery-image")%>
+								<div class="gallery-item-info">
+									<ul>
+										<li class="gallery-item-likes"><span class="visually-hidden">Confirm:</span><i class="far fa-thumbs-up" aria-hidden="true"></i><%=Confirm.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> <%=Coment.where(:problem_id=>issue.id).count%></li>
+										<li class="gallery-item-comments"><span class="visually-hidden">Status:</span><i class="fas fa-info-circle" aria-hidden="true"></i> <%=issue.status%></li>
+										<%this_user = User.find_by(:id=> session[:user_id])%>
+										<% if this_user.id==issue.user_id%>
+											<% if issue.status=='Submitted'%>
+												<li class="gallery-item-comments"><span class="visually-hidden">Issue:</span><i class="fas fa-camera" aria-hidden="true"><%= link_to 'Show', problem%></i> </li>
+											<% end %>
+										<% end %>
+									</ul>
+								</div>
+						</div>
+				<% end %>
+			<%end %>
+
+			</div>
+		</div>
+		<!-- End of gallery -->
+	</div>
+	<!-- End of container -->
+
+</main>
+<script>
+	
+	$(function () {
+		$("#all").css({
+			"border-bottom":"2px solid #1f66ffb0",
+			'color': '#1f66ff'
+		})
+		$(".issues").hide()
+		$("#all-issues").show()
+
+		$(".btn2").click(function () {
+			$(".btn2").css({
+				"border-bottom":"none",
+				 'color': '#4274ff'
+			})
+      		$(this).css({
+				"border-bottom":"2px solid #1f66ffb0",
+				 'color': '#1f66ff'
+			})
+      	});
+		$("#all").click(function(){
+			$(".issues").hide()
+			$("#all-issues").show()
+		})
+		$("#submitted").click(function(){
+			$(".issues").hide()
+			$("#submitted-issues").show()
+		})
+		$("#supported").click(function(){
+			$(".issues").hide()
+			$("#supported-issues").show()
+		})
+		$("#joined").click(function(){
+			$(".issues").hide()
+			$("#joined-issues").show()
+		})
+		$("#fixed").click(function(){
+			$(".issues").hide()
+			$("#fixed-issues").show()
+		})
+		
+  	});
+</script>

@@ -1,0 +1,303 @@
+
+<%= stylesheet_link_tag 'join'%>
+
+<style>
+    @media
+    only screen 
+    and (max-width: 760px), (min-device-width: 768px) 
+    and (max-device-width: 1024px) {
+        .container-fluid{
+            all:unset
+        }
+        .join-container{
+            width: 100%;
+            padding: 2px !important;
+            margin: 5 !important;
+            height: 75vh;
+        }
+        .row{
+            width: 100%;
+            padding: 10px;
+        }
+
+        .join-container2{
+            height: 85%;
+        }
+
+      
+        .support-join-btns{
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: flex-start;
+        }
+        .btn-support{
+            font-size: 12px;
+            padding: 5px;
+        }
+        .btn-accept{
+            font-size: 12px;
+            padding: 5px;
+            width: fit-content;
+        }
+        .model{
+            width: 100%;
+            height: 100%;
+            font-size: 15px;
+        }
+        .model-container{
+            width: 100%;
+        }
+        .fa-home{
+            font-size: 12px;
+        }
+        
+    }
+</style>
+<div>
+    <div class="h2"> Accepted Issues</div>
+    <div class="caption"> Here you can join or support others</div>
+</div>
+
+
+<div class="row">
+    <%@problems.each do |problem|%>
+        <div class="shadow-sm p-3 mb-5 bg-white rounded join-container">
+            <div class="join-container2">
+                <%= image_tag(problem.image, :class => "join-issue-img")  %>
+               
+            </div>
+            <%# modal supporter %>
+           
+            <div class="support-join-btns">
+                <div>
+                    <% accept = Accept.where(:problem_id => problem.id )%>
+                    <% accept.each do |accept|%>
+                    <% if accept.done ==true %>
+                        <input type=submit class='btn btn-outline-info btn-support' value=Supported disabled>
+                    <% else %>
+                        <button class='btn btn-outline-info btn-support support'>Support</button>
+                        <div class="model-container">
+                            <div class="model">
+                                <i class="fas fa-home"></i>
+                                <h3>support Box</h3>
+                                <% @user.each do |user| %>
+                                    <p>welcome <%=user.first_name%> </p>
+                                    <h3>choos what you want to support</h3>
+                                    <div class=main>
+                                        <button id=ass class=on>Money</button>
+                                        <button id=on class=off>Matt</button>
+                                    </div>
+                                    <div class=money>
+                                        <form action=/money method=POST>
+                                            <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                                            <input type=hidden name=money[user_id] value=<%= user.id%>>
+                                            <input type=hidden name= money[problem_id] value=<%= problem.id%>>
+                                            <input type=number name=money[amount] class="matt-child sel" min="1000">
+                                            <button class="btn-money matt-child">Support</button>
+                                        </form>
+                                    </div>
+                                    <div class="matt">
+                                        <%@mat = Material.where(:category_id=>problem.category_id)%>
+
+                                        <form action=/supmat method=POST>
+                                            <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                                            <input type=hidden name=supmat[user_id] value=<%= user.id%>>
+                                            <input type=hidden name= supmat[problem_id] value=<%= problem.id%>>
+                                            <select class="form-control w-50 matt-child" name=supmat[material_id]>
+                                            <%# <option><option> %>
+                                            <% @mat.each do |mat| %>
+                                            <option value=<%=mat.id%>><%= mat.name %></option>
+                                            <% end %>
+                                            </select>
+                                            <input type=number class=" matt-child form-control w-50" name=supmat[quantity] min="1">
+                                            <button class="matt-child">Support</button>
+                                        </form>
+                                        </div>
+                                <% end %>
+                                <i class="fas fa-times close"></i>
+                            </div>
+                        </div>
+                    <% end %>
+                    <% end %>
+                    <button class='btn btn-outline-info btn-support details'>Details</button>
+                    <div class="model-container2">
+                            <div class="model">
+                                <i class="fas fa-home"></i>
+                                <h3>Needed volunteers and materials Box</h3>
+                                    <div class=main>
+                                        <button id=ass class=on>Issue Details</button>
+                                        <button id=on class=off>Requirements</button>
+                                    </div>
+                                    <div class=money>
+                                         <div class="join-issue-info">
+                                            <div class="blog-category">
+                                                <%@cat=Category.where(:id=>problem.category_id)%>
+                                                <%@cat.each do |cat|%>
+                                                    <i class="far fa-newspaper"></i> <%=cat.name%> Issue
+                                                <% end %>
+                                            </div>
+                                            <div>
+                                                <div class="blog-card-caption">Location:</div>
+                                                <%@city=City.where(:id=>problem.city_id)%>
+                                                <%@city.each do |city|%>
+                                                    <%@gover=Governorate.where(:id=>city.governorate_id)%>
+                                                <% end %>
+                                                <div>
+                                                    <span>Governorate:</span>
+                                                    <%@gover.each do |go|%>
+                                                    <span><%=go.name%></span>
+                                                    <% end %>
+                                                </div>
+                                                <div>
+                                                    <span>City:</span>
+                                                    <%@city.each do |city|%>
+                                                        <span><%=city.name%></span>
+                                                    <%end %>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="blog-card-caption">Description</div>
+                                                <div class="blog-card-description">
+                                                    <%=problem.desciption%>
+                                                </div>
+                                            </div>
+                                            <div class="blog-card-caption">
+                                                <span>Submitted by:</span>
+                                                <span>
+                                                    <%user=User.where(:id=>problem.user_id)%>
+                                                    <%user.each do |user|%>
+                                                        <span > <%= link_to "#{user.first_name} #{user.last_name}",personal_page_user_path(user),:class=>"link-dark", :style=>"text-decoration: none;" %></span>
+                                                    <%end%>
+                                                </span>
+                                            </div>
+                                            <div class="blog-card-caption">
+                                                <span>Submitted date:</span>
+                                                <span>
+                                                    <%=problem.created_at.to_date%>
+                                                </span>
+                                            </div>
+                                            <div class="blog-card-caption">
+                                                <span class="supervisor">Supervisor: </span>
+                                                <span class="supervisor-name">
+                                                    <%accept=Accept.where(:problem_id=>problem.id)%>
+                                                    <%accept.each do |acc|%>
+                                                        <%user=User.where(:id=>acc.user_id)%>
+                                                    <%end%>
+                                                    <%user.each do |user|%>
+                                                        <span> <%= link_to "#{user.first_name} #{user.last_name}",personal_page_user_path(user),:class=>"link-dark", :style=>"text-decoration: none; width: 100%" %></span>
+                                                    <%end%>
+                                                </span>
+                                            </div>
+                                            <div class="blog-card-caption">
+                                                <span>Accept Date:</span>
+                                                <span>
+                                                    <%=problem.created_at.to_date%>
+                                                    <% @id=problem.id%>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="matt">
+                                        <div class="join-issue-info">
+                                            <div class="blog-category requirements">
+                                                <div>
+                                                    <%@acceptall = Accept.where(:problem_id=>@id)%>
+                                                    <% for i in @acceptall%>
+                                                    
+                                                        <div>Number of requested volunteers: <span><%=i.required_volunteer%></span></div>
+                                                    <% end %>
+                                                </div>
+                                                <div>
+                                                    <span>Joined volunteers: </span>
+                                                    <span><%=JoinIssue.where(:problem_id=>problem.id).count%></span></div>
+                                            </div>
+                                            <div>
+                                                <div class="blog-card-caption">Requested Materials:</div>
+                                                <%@accepta = Accept.where(:problem_id=>@id)%>
+                                                    <% @accepta.each do |i|%>
+                                                    <%@bill = BillOfMaterial.where(:accept_id=>i.id)%>
+                                                    <% @bill.each do |j|%>
+                                                    <% @materials= Material.where(:id=>j.material_id)%>
+                                                        <% @materials.each do |x|%>
+                                                        <div><%=x.name%> <%= j.quantity%></div>
+                                                        <% end %>
+                                                    <% end %>
+                                                    <div>Total cost:<%= i.totale_cost%></div>
+
+                                                <%end%>
+                                            </div>                                                
+                                        </div>
+                                    </div>
+                                <i class="fas fa-times close close2"></i>
+                            </div>
+                        </div>
+                </div>
+
+                <div>
+                    <% if @accepter.present? %>
+                    <input  style="width:100px"type=submit class='btn btn-outline-info w-100 btn-accept' value='your already Supervisor' disabled>
+                    <% else %>
+                        <%join=JoinIssue.where(:user_id=>session[:user_id],:status=>true)%>
+                        <%join_user=JoinIssue.where(:problem_id=>problem.id ,:user_id=>session[:user_id], :status=>true)%>
+                        <%if join_user.present?%>
+                            <input style="width:100px" type=submit class='btn btn-outline-info btn-accept' value=Joined disabled>
+                        <%elsif join.present?%>
+                                <input style="width:auto" type=submit class='btn btn-outline-info' value="you're joined in another issue btn-accept" disabled>
+                        <%else%>
+                            <%= form_tag({:controller=>'users',:action=>'join'},:remote=> true, method: :post) do%>
+                                <%# <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>
+                                <input type=hidden name=join_issue[problem_id] value=<%=problem.id%>>
+                                <%@accept=Accept.where(:problem_id=>problem.id)%>
+                                <%@accept.each do |acc|%>
+                                    <%if acc.required_volunteer == JoinIssue.where(:problem_id=>problem.id).count%>
+                                        <input  style="width:100px"type=submit class='btn btn-outline-info btn-accept' value=Join disabled>
+                                    <%else%>
+                                        <input style="width:100px"  type=submit class='btn btn-outline-info btn-accept' value= Join>
+                                    <%end%>
+                                <%end%>
+                            <% end %>
+                        <%end%>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <%end%>
+</div>
+<a class="border rounded d-inline scroll-to-top" href="" style="margin-right: 60px;">
+    <i class="fas fa-angle-up"></i>
+</a>
+<a class="border rounded d-inline scroll-to-top" href="/submit_issue">
+    <button class="btn btn-primary add-issue fa fa-plus" type="button" data-toggle="modal" data-target="#submit_issue"></button>
+<a> 
+<script>
+    $(function(){
+        $('.support').click(function(){
+            $(this).siblings('.model-container').delay(2000).css('transform',' scale(1)')
+        });
+        $('.details').click(function(){
+            $(this).siblings('.model-container2').delay(2000).css('transform',' scale(1)')
+        });
+        $('body').on('click','.close',function(){
+            $('.model-container').css('transform',' scale(0)')
+        });
+        $('body').on('click','.close2',function(){
+            $('.model-container2').css('transform',' scale(0)')
+        });
+        $('.off').click(function(){
+            $('.money').hide()
+            $('.matt').show()
+            $('.off').delay(2000).css('background','rgb(50, 150, 250)')
+            $('.on').delay(2000).css('background','#fff')
+        });
+        $('.on').click(function(){
+            $('.money').show()
+            $('.matt').hide()
+            $('.on').delay(5000).css('background','rgb(50, 150, 250)')
+            $('.off').delay(5000).css('background','#fff')
+        });
+        // $(".show-details").click(function(){
+        //     $(this).parents(".join-issue-info").css('display','flex')
+        // })
+    });
+</script>

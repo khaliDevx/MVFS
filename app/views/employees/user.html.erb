@@ -1,0 +1,191 @@
+
+    <html>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.css"/>
+     
+        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        .action {
+            width: 100%;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-items: center;
+        }
+        .bg-gradient-primary{
+            color: #eee;
+            background-color: rgb(41, 134, 255);
+        }
+        .action .btn {
+            width: 90%;
+            margin: 3px;
+            height: 35px;
+            padding: 5px;
+        }
+    
+        .action form {
+            width: 100%;
+        }
+        .container{
+            margin: 0;
+            padding: 20px;
+        }
+        .user-emp{
+            width:30%;
+            margin:30px 10px;
+        }
+        /*
+        Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+        */
+        @media
+        only screen 
+        and (max-width: 760px), (min-device-width: 768px) 
+        and (max-device-width: 1024px)  {
+    
+            /* Force table to not be like tables anymore */
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+    
+            /* Hide table headers (but not display: none;, for accessibility) */
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+    
+            tr {
+            margin: 0 0 1rem 0;
+            }
+                    td {
+                /* Behave  like a "row" */
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+    
+            td:before {
+                /* Now like a table header */
+                position: absolute;
+                /* Top/left values mimic padding */
+                top: 0;
+                left: 6px;
+                width: 45%;
+                padding: 10px 10px 0 0;
+                white-space: nowrap;
+                text-align: left;
+            }
+    
+            /*
+            Label the data
+            You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+            */
+            td:nth-of-type(1):before { content: "First Name"; }
+            td:nth-of-type(2):before { content: "Last Name"; }
+            td:nth-of-type(3):before { content: "Phone Number"; }
+            td:nth-of-type(4):before { content: "State"; }
+            td:nth-of-type(5):before { content: "City"; }
+            td:nth-of-type(6):before { content: "Account Status"; }
+            td:nth-of-type(7):before { content: ""; }
+        }
+            
+    </style>
+
+    <%user = User.where(:id=>session[:user_id],:user_type=>"Employee" )%>
+    <% if user.present?%>
+        <%@users = User.volunteer%>
+    <% else %>
+        <%@users = User.where(:user_type=>params[:type])%>
+    <% end %>
+    
+    <h3 class="text-dark mb-4">Users</h3>
+    <% user = User.find_by(:id=>session[:user_id])%>
+
+    <%if user.user_type=="Admin"%>
+        <%= form_tag '/user', :method =>'get' do%>
+            <%= select_tag :type, options_for_select([ "Volunteer", "Employee" ], params[:type]), 
+            id: "different_option_value_html", class: "form-select user-emp", onchange: "this.form.submit();", include_blank: "Select Type?"%>
+        <%end%>
+    <% end %>
+        <table id="users-table" role="table" class="table table-bordered table-hover">
+            <thead role="rowgroup" class="">
+                <tr role="row"  class="bg-gradient-primary">
+                    <th role="columnheader">First Name</th>
+                    <th role="columnheader">Last Name</th>
+                    <th role="columnheader">Phone Number</th>
+                    <th role="columnheader">State</th>
+                    <th role="columnheader">City</th>
+                    <th role="columnheader">Account Status</th>
+                    <th role="columnheader">Action</th>
+                </tr>
+            </thead>
+            <tbody role="rowgroup">
+                <% @users.each do |user| %>
+                    <tr role="row">
+                        <td role="cell">
+                            <%= link_to "#{user.first_name} " ,personal_page_user_path(user),:class=>
+                                "link-dark" %>
+                        </td>
+                        <td role="cell">
+                            <%= link_to "#{user.last_name} " ,personal_page_user_path(user),:class=>
+                                "link-dark" %>
+                        </td>
+                        <td role="cell">
+                            <%=user.phone%>
+                        </td>
+                        <%@city=City.where(:id=>1)%>
+                            <% @city.each do |city| %>
+                                <%@gove=Governorate.where(:id=>city.governorate_id)%>
+                        <% end %>
+                            <% @gove.each do |gove| %>
+                            <td role="cell">
+                                <%=gove.name%>
+                            </td>
+                        <% end %>
+                        <% @city.each do |city| %>
+                            <td role="cell">
+                                <%=city.name%>
+                            </td>
+                        <% end %>
+                        <%if user.accountstatu==true%>
+                            <td role="cell">Active</td>
+                        <%else%>
+                            <td role="cell">Blocked</td>
+                        <%end%>
+                        <td class=action role="cell">
+                            <%if user.accountstatu==true%>
+                                <%= form_tag({:controller=>'employees',:action=>'block'},:remote=> true, method: :post) do%>
+                                    <input type='hidden'name='block[accountstatu]'value=false>
+                                    <input type='hidden'name='block[id]'value=<%=user.id%>>
+                                    <input type=submit value=Block class="btn btn-warning d-block">
+                                <% end %>
+                            <%else%>
+                                <%= form_tag({:controller=>'employees',:action=>'active'},:remote=> true, method: :post) do%>
+                                    <input type='hidden'name='active[accountstatu]'value=true>
+                                    <input type='hidden'name='active[id]'value=<%=user.id%>>
+                                    <input type=submit value=Activate class="btn btn-primary d-block">
+                                <% end %>
+                            <%end%>
+                            <%= link_to 'Remove' , user, method: :delete, data: {confirm: 'Are you sure?'}, class:"btn btn-danger"%>
+                        </td>
+                       
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    
+    <a class="border rounded d-inline scroll-to-top" href="">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <script>
+        $(document).ready( function () {
+            $('#users-table').DataTable({
+                "responsive": true,
+            });
+        } );
+    </script>
+    
+    

@@ -1,0 +1,74 @@
+<div class="body-sessions">
+    <div class="card shadow-lg o-hidden border-0 my-5">
+        <div class="card-body">
+            <div class="text-center">
+                <h4 class="text-dark mb-4">Create an Employee</h4>
+            </div>
+            <form class="user" action="/employee" method="POST">
+                <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                <div class="row mb-3">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input class="form-control form-control-user" type="text" id="exampleFirstName"
+                            placeholder="First Name" name="employee[first_name]" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control form-control-user" type="text" id="exampleFirstName"
+                            placeholder="Last Name" name="employee[last_name]" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col mb-3">
+                        <input class="form-control form-control-user" type="text" id="exampleInputEmail"
+                            aria-describedby="emailHelp" placeholder="Username" name="employee[username]"
+                            autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control form-control-user" type="number" id="examplephone"
+                            placeholder="Phone Number" name="employee[phone]" autocomplete="off">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input class="form-control form-control-user" type="password" id="examplePasswordInput"
+                            placeholder="Password" name="employee[password]">
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control form-control-user" type="password" id="exampleRepeatPasswordInput"
+                            placeholder="Repeat Password">
+                    </div>
+                </div>
+                <div class="location-new-user">
+                    <div id="floating-label-1" class="form-floating mb-3">
+                        <select class="form-select form-select" for="floatinginput" placeholder="HGsOFT">
+                            <%@gover=Governorate.all%>
+                                <option></option>
+                                <% @gover.each do |go| %>
+                                    <option value="<%= go.id%>">
+                                        <%=go.name%>
+                                    </option>
+                                    <% end %>
+                        </select>
+                        <label class="form-label" id="floating-label-2" for="floatinginput">Governorates...</label>
+                    </div>
+                    <div id="floating-label-1" class="form-floating mb-3">
+                        <%@city=City.all%>
+                            <select class="form-select form-select" name="employee[city_id]">
+                                <option></option>
+                                <% @city.each do |ct| %>
+                                    <option value="<%=ct.id%>">
+                                        <%=ct.name%>
+                                    </option>
+                                    <% end %>
+                            </select>
+                            <label class="form-label" id="floating-label-2" for="floatinginput">Cities...</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary d-block btn-user width-50 mb-3" type="submit">Register
+                    Account</button>
+            </form>
+            <div class="text-center">
+                <a class="small" href="/login">Already have an account!</a>
+            </div>
+        </div>
+    </div>
+</div>

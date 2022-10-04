@@ -1,0 +1,128 @@
+<style>
+ 
+
+</style>
+ <%= stylesheet_link_tag 'help'%>
+
+<body>
+        <div class="layer" id="index2">
+            <div class="questionsContainer">
+                <div id="questionTitle">
+                    Frequently Asked Questions
+                </div>
+                <div class="questions">
+                    <div class="question-info">
+                        <div class="question">
+                            <span>What Is Fix It System?</span> <span class="open">+</span>
+                        </div>
+                        <div id="info1" class="info">
+                            FixIt is a dynamic web site for Management of voluntary Fixing system that manage and facilitate volunteering works 
+                        </div>
+                    </div>
+                    <div class="question-info">
+                        <div class="question">
+                            <span>who can use this FixIt system? </span> <span class="open">+</span>
+                        </div>
+                        <div id="info2" class="info">
+                            Any one has electronic device can run browser can run and use our system, any one every where can use and browse the system freely 
+                        </div>
+                    </div>
+                    <div class="question-info">
+                        <div class="question">
+                            <span>What we can do in FixIt system? </span> <span class="open" id="open3">+</span>
+                        </div>
+                        <div class="info" id="info3">
+                            You can submit any issue or problem you see around you in your area to the system, you submit issues so they will be fixed by other users who called volunteers                     
+                        </div>
+                    </div>
+                    <div class="question-info">
+                        <div class="question" >
+                            <span>Who are the volunteers?</span> <span class="open" id="open4">+</span>
+                        </div>
+                        <div class="info" id="info4">
+                            The volunteers Are the users of the system, you can be one of them and help them to fix issues which submitted by other users of the system all around our country. 
+                        </div>
+                    </div>
+                    <div class="question-info">
+                        <div class="question">
+                            <span>How I can be a volunteer?</span> <span class="open" id="open5">+</span>
+                        </div>
+                        <div class="info" id="info5">
+                            It is easy as a blink of an eye! you just have sign up to FixIt system and that is it you can volunteer to fix issues or tell others about issues needed to be fixed, and do not worry about the materials or the money that you need to fix the issues!! there are some volunteers who would love to support you. 
+                        </div>
+                    </div>
+                    <div class="question-info">
+                        <div class="question">
+                            <span>How I can request support?</span> <span class="open" id="open5">+</span>
+                        </div>
+                        <div class="info" id="info5">
+                            after you volunteered to fix a specific issue, then you can request anyy materials you need. then other users like which have the ability to support you will give you what you need. 
+                        </div>
+                    </div>
+                    
+                </div>   
+            </div>
+        </div>
+        <script>
+              $(document).ready(function(){    
+    $('.question-info').click(function(){
+        $(this).children('.info').slideToggle()
+        $(this).find('.open').toggleClass('opened')
+    })
+
+    $('.dot1').click(function(){
+        $('.page1').show(350);
+        $('.page2').hide(350);
+        $('.page3').hide(350);
+    });
+
+    $('.dot2').click(function(){
+        $('.page2').show(350);
+        $('.page1').hide(350);
+        $('.page3').hide(350);
+    });
+
+    $('.dot3').click(function(){
+        $('.page3').show(350);
+        $('.page1').hide(350);
+        $('.page2').hide(350);
+    });
+
+    $('.posters').click(function(){
+        $('.box').removeClass('hide')
+        $('.box').addClass('show')
+        $('#bigimg').attr('src', $(this).attr('src'))
+    })
+
+    
+    $('.smallimg').mouseover(function(){
+        $(this).css('opacity', '1')
+    })
+    $('.smallimg').mouseleave(function(){
+        $(this).css('opacity', '0.8')
+    })
+    $('.smallimg').click(function(){
+        if($('#bigimg').attr('src') != $(this).attr('src')){
+            $(this).animate({
+                opacity: "0.3"
+            },300)
+            $(this).animate({
+                opacity: "1"
+            },300)
+           
+            $('#bigimg').animate({
+                width: "0",
+                hight: "0",
+                opacity: "0"
+            },300).attr('src', $(this).attr('src'))
+            $('#bigimg').animate({
+                width: "300px",
+                hight: "450px",
+                opacity: "1"
+            },300)
+        }
+       
+    })
+})
+        </script>
+  </body>

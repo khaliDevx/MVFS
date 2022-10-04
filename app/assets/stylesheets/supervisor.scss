@@ -1,0 +1,228 @@
+* {
+	box-sizing: border-box;
+	transition: all.2s linear;
+
+}
+.instagram-card span {
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.instagram-card {
+	width: auto;
+	display: flex;
+	flex-flow: column nowrap;
+	padding: 20px;
+}
+.instagram-card2{
+	display: flex;
+	flex-flow: column nowrap;
+	padding: 10px;
+}
+.support-tables{
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px;
+}
+.support-tables div{
+	margin: 5px;
+}
+.support-tables .mat-table{
+	width: 60%;
+}
+.support-tables .money-table{
+	width: 40%;
+}
+.intagram-card-image {
+	position: relative;
+	width: auto;
+	height: auto;
+	margin-bottom: 5px;
+	-webkit-box-shadow: 0 8px 6px -6px black;
+	-moz-box-shadow: 0 8px 6px -6px black;
+	box-shadow: 0 8px 6px -6px black;
+}
+
+.issue-details{
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: space-between;
+}
+.group-title{
+	margin-bottom: 10px;
+}
+.groups-section{
+	border-left: 5px solid #2b87f071;
+	min-height: 300px;
+	width: 50%;
+	padding: 0 0 0 30px;
+}
+.instagram-card-user-image {
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	vertical-align: middle;
+}
+
+.instagram-card-user-name {
+	margin-left: 20px;
+	display: inline;
+}
+
+.intagram-card-image img {
+	width: 300px;
+	height: 300px;
+	border-radius: 5px;
+}
+
+.category-date {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: 5px;
+}
+
+.issue_date {
+	font-size: 0.8em;
+	float: right;
+}
+
+.accept-show-requested {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	padding-left: 10px;
+	width: 70%;
+}
+
+.accept-show-requested .accept {
+
+}
+.issue-inprogres-card{
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: flex-start;
+	padding: 5px;
+	margin: 0 30px 0 0;
+	width: 30%;
+}
+.submitted-issue-details {
+	padding: 0;
+}
+
+.instagram-card-content {
+	padding: 20px;
+}
+
+
+.instagram-card-content-user {
+	font-weight: bold;
+	color: #262626;
+}
+
+.blog-text-success {
+	color: #6f6f6f !important
+}
+
+
+a {
+
+	text-decoration: none;
+
+}
+
+
+hr {
+	border: none;
+	border-bottom: 1px solid #ccc;
+	margin-top: 30px;
+	margin-bottom: 0px;
+
+}
+
+.blog-card-blog .blog-card-caption {
+	margin-top: 5px
+}
+
+.blog-card-caption,
+.blog-card-caption a {
+	color: #333;
+	text-decoration: none
+}
+
+
+.blog-card-description {
+	color: #444;
+	font: 0.9em sans-serif;
+	margin: 7px;
+}
+
+.blog-table {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: flex-start;
+	margin-bottom: 0;
+	width: 65%;
+	padding: 10px 0 0 10px;
+}
+
+
+
+.issue-img-group-sections{
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: flex-start;
+}
+@media
+only screen 
+and (max-width: 760px), (min-device-width: 768px) 
+and (max-device-width: 1024px) {
+  .issue-inprogres-card{
+	width:auto;
+  }
+  .intagram-card-image{
+	width:100%;
+	// padding: 100%;
+
+	
+  }
+  .issue-img-group-sections{
+	display:block;
+  }
+ .blog-table{
+  /* margin-top:100%; */
+  padding-bottom: 20px;
+  
+ }
+ .groups-section{
+	padding-right: 50%;
+ }
+ .support-tables{
+	display: block;
+ }
+ .btn1{
+	display: block;
+	
+ }
+ .btn2{
+	display: block;
+ }
+ .add-issue{
+	width: 37px;
+	height: 37px;
+	border-radius: 50%;
+	font-size: 16px;
+	padding-right: 12px !important;
+  }
+  .scroll-to-top{
+	width: 37px;
+	height: 37px;
+	border-radius: 50%;
+	margin: 0 10px;
+	padding: 0 0 15px 0;
+  }
+}

@@ -1,0 +1,179 @@
+<%= stylesheet_link_tag 'sessions'%>
+<style>
+        .success-message{
+            color:green
+        }
+        .error-message{
+            color:red;
+        }
+</style>
+<div class="body-sessions">
+    <div class="greet">
+        <h1>Hello there!</h1>
+        <h2>Welcome to <span>FixIt</span>.</h2>
+        <h2>You want to <span>Volunteer</span> and fixing <span>Issues</span>?!</h2>
+        <h3>You are at the right place. please sign up now!</h3>
+    </div>
+    <div class="card shadow-lg o-hidden border-0 my-5">
+        <div class="card-body">
+            <div class="text-center">
+                <h4 class="text-dark mb-4">Create an Account</h4>
+            </div>
+            <form class="user needs-validation" action="/user" method="POST" novalidate>
+                <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                <div class="row mb-3">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input class="form-control form-control-user" type="text" id="exampleFirstName"
+                            placeholder="First Name" name="user[first_name]" id="validationCustom01" autocomplete="off" required>
+                            <div class="invalid-feedback">
+                                please enter your first name!
+                            </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control form-control-user" type="text" id="exampleFirstName"
+                            placeholder="Last Name" name="user[last_name]" autocomplete="off" required>
+                        <div class="invalid-feedback">
+                                please enter your last name!
+                            </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col mb-3">
+                        <input class="form-control form-control-user" type="text" 
+                            aria-describedby="emailHelp" placeholder="Username" name="user[username]"
+                            autocomplete="off" required>
+                            <div class="invalid-feedback">
+                                please choose a username!
+                            </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control form-control-user" type="number" 
+                            placeholder="Phone Number" name="user[phone]" autocomplete="off" required>
+                        <div class="invalid-feedback">
+                                please enter your phone number!
+                            </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input class="pass form-control form-control-user" type="password" id="password"
+                            placeholder="Password" name="user[password]"required>
+                        <div class="invalid-feedback">
+                                please choose a password!
+                            </div>
+                            <div class="form-text password-message"></div>
+
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="pass2 form-control form-control-user" type="password" id="confirmpassword"
+                            placeholder="Repeat Password" required>
+                        <div class="invalid-feedback pass2error">
+                                please re-enter your password!
+                            </div>
+                            <div class="form-text confirm-message"></div>
+
+                    </div>
+                </div>
+                <div class="location-new-user">
+                    <div id="floating-label-1" class="form-floating mb-3">
+                        <select class="form-select form-select" for="floatinginput" placeholder="HGsOFT" required>
+                            <%@gover=Governorate.all%>
+                                <option></option>
+                                <% @gover.each do |go| %>
+                                    <option value="<%= go.id%>">
+                                        <%=go.name%>
+                                    </option>
+                                    <% end %>
+                        </select>
+                        <div class="invalid-feedback">
+                                please select a state!
+                            </div>
+                        <label class="form-label" id="floating-label-2" for="floatinginput">States...</label>
+                    </div>
+                    <div id="floating-label-1" class="form-floating mb-3">
+                        <%@city=City.all%>
+                            <select required class="form-select form-select" name="user[city_id]">
+                                <option></option>
+                                <% @city.each do |ct| %>
+                                    <option value="<%=ct.id%>">
+                                        <%=ct.name%>
+                                    </option>
+                                    <% end %>
+                            </select>
+                            <div class="invalid-feedback">
+                                please select a city!
+                            </div>
+                            <label class="form-label" id="floating-label-2" for="floatinginput">Cities...</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary d-block btn-user width-50 mb-3 register" type="submit">Register
+                    Account</button>
+            </form>
+            <div class="text-center">
+                <a class="small" href="/login">Already have an account!</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+    $(".register").click(function(){
+        if($(".pass").val() != $(".pass2").val()){
+            $(".pass2error").val("passwords not match!")
+        }
+    })
+
+    $('#password, #confirmpassword').on('keyup', function(){
+
+        $('.confirm-message').removeClass('success-message').removeClass('error-message');
+
+        let password=$('#password').val();
+        let password_length=$('#password').val().length;
+        let confirm_password=$('#confirmpassword').val();
+        if(password_length<8)
+        {
+            $('.password-message').text('password must be greater than 8 charachters!').addClass('error-message');
+            
+        }else
+        {   
+            $('.password-message').text('good password').removeClass('error-message');
+            $('.password-message').text('good password').addClass('success-message');
+
+            if(password===""){
+            $('.confirm-message').text("Password Field cannot be empty").addClass('error-message');
+            }
+            else if(confirm_password===""){
+                $('.confirm-message').text("Confirm Password Field cannot be empty").addClass('error-message');
+            }
+            else if(confirm_password===password)
+            {
+                $('.confirm-message').text('Password Match!').addClass('success-message');
+            }
+            
+            else{
+                $('.confirm-message').text("Password Doesn't Match!").addClass('error-message');
+            }
+        }
+        
+
+    });
+})()
+</script>

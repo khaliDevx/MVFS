@@ -1,0 +1,417 @@
+<%= stylesheet_link_tag 'index' %>
+<style>
+  @media
+    only screen 
+    and (max-width: 760px), (min-device-width: 768px) 
+    and (max-device-width: 1024px) {
+      .instagram-card{
+        flex-flow: column nowrap;
+        width: auto;
+        padding: 15px 7px !important;
+      }
+      .submitted-issue-details-comment{
+        border: none;
+        padding: 0;
+      }
+      .submitted-issue-details{
+        display: none;
+      }
+      .intagram-card-image img {
+        width: 98%;
+        max-height: 300px;
+        border-radius: 5px;
+      }
+      .intagram-card-image{
+        width: 108%;
+      }
+      .three-dots{
+        padding-right: 0 !important;
+      }
+      .instagram-card-header{
+        width: 100%;
+	      justify-content: space-between;
+
+      }
+      .instagram-card-header div{
+        width: 100%;
+        margin-right: 10px;
+      }            
+      .employee-confirmation{
+        width: 110%;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .employee-confirmation form{
+        width: 56%;
+      }
+      .employee-confirmation .like-unlike{
+        width: 34%;
+      }
+      .like-unlike i{
+        font-size: 20px;
+      }
+      .like-unlike span{
+        font-size: 14px;
+      }
+      .like-unlike .like{
+        margin: 0 12px 0 0;
+      }
+      .employee-confirmation .publish-destroy{
+        font-size: 10px;
+        padding: 1;
+        margin: 0 3px 0 0;
+      }
+      .details{
+        margin: 20px 0;
+        font-size: 15px;
+        cursor: pointer;
+        display: block;
+        padding: 0;
+      }
+      .instagram-card-footer2 div{
+        padding: 0;
+        margin-top: 5px;
+      }
+      .open{
+        padding: 0;
+        margin-bottom: 20px 0;
+      }
+      .details2{
+        display: none;
+      }
+      .model-container{
+        width: 100%;
+        height: 100%;
+      }
+      .model-container .comments-model{
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+      .instagram-card-user-image{
+        width: 30px;
+        height: 30px;
+      }
+      .instagram-card-user-name{
+        font-size: 15px;
+      }
+      .passed-issues div{
+        font-size: 20px;
+        padding-left: 10px;
+      }
+      .container-fluid{
+        all: initial;
+      }
+      .add-issue{
+        width: 37px;
+        height: 37px;
+        border-radius: 50%;
+        font-size: 16px;
+        padding-right: 12px !important;
+      }
+      .scroll-to-top{
+        width: 37px;
+        height: 37px;
+        border-radius: 50%;
+        margin: 0 10px;
+        padding: 0 0 15px 0;
+      }
+      .instagram-card-header2{
+        width: 80% !important;
+      }
+      .instagram-card-header2 .instagram-card-user-name{
+        width: 80% !important;
+        font-size: 13px;
+      }
+      .cmt{
+        font-size: 12px;
+      }
+      .users-comments .instagram-card-user-name{
+        font-size: 12px;
+      }
+    }
+</style>
+<div class="passed-issues d-sm-flex justify-content-between align-items-center mb-4">
+  <div class="h3">Passed Issues</div>
+</div>
+<% @problems.each do |problem| %>
+  <div class="instagram-card shadow-sm p-3 mb-5 bg-white rounded">
+    <div class="submitted-issue-img-likes">
+      <div class="instagram-card-header">
+        <div>
+          <% @submiter = User.where(:id=> problem.user_id)%>
+          <% @submiter.each do |user| %>
+            <%if @photos=Photo.where(:user_id=>user.id).present?%>
+              <%@photos= Photo.where(:user_id=>user.id)%>
+                <% @photos.each do |photo| %>
+                  <% if (photo.image.attached?) %>
+                    <%=image_tag(url_for(photo.image),class:'instagram-card-user-image')%>
+                  <% else %>
+                    <%=image_tag('avatar.png',class:'instagram-card-user-image')%>
+                  <% end %>
+                <% end %>
+            <% else %>
+              <%=image_tag('avatar.png',class:'instagram-card-user-image')%>
+            <% end %>
+              <div class="instagram-card-user-name h5">
+                <%=user.first_name%>
+                <%=user.last_name%>
+              </div>
+          <%end%>
+        </div>
+        <button id="myBtn" class="three-dots fa fa-ellipsis-h"></button>
+      </div>
+      <div class="intagram-card-image">
+        <% if (problem.image.attached?) %>
+          <%=image_tag(url_for(problem.image))%>
+        <% else %>
+          <p>no image</p>
+        <% end %>
+      </div>
+      <div class="category-date">
+        <% @category=Category.where(:id=>problem.category_id)%>
+        <% @category.each do |category| %>
+          <div class="blog-category blog-text-success">
+            <%= category.name%>
+          </div>
+        <% end %>
+        <div class="issue_date blog-text-success">
+          <span>Date: </span>
+          <span>
+            <%=problem.created_at.to_date%>
+          </span>
+        </div>
+      </div>
+      <%if @employee.present?%>
+        <div class="employee-confirmation">
+          <%= form_tag({:controller=>'employees',:action=>'confirm'},:remote=> true, method: :post) do%>
+            <input type='hidden' name='confirm_issue[id]' value="<%=problem.id%>">
+            <button class='btn btn-primary publish-destroy' name=confirm_issue[status] value=Confirmed>Publish</button>
+            <%= link_to 'Destroy' , problem, method: :delete, data: { confirm: 'Are you sure?' },class:"btn btn-danger publish-destroy" %>
+          <% end %>
+          <div class="like-unlike">
+            <div class="like">
+              <i class="far fa-thumbs-up"></i>
+              <span>
+                <%=Confirm.where(:problem_id=>problem.id,:confirmed=>true).count%>
+              </span>
+            </div>
+            <div>
+              <i class="far fa-thumbs-down"></i>
+              <span>
+                <%=Confirm.where(:problem_id=>problem.id,:confirmed=>false).count%>
+              </span>
+            </div>
+          </div>
+        </div>
+      <%else%>
+        <%= form_tag({:controller=>'problems',:action=>'confirm'},:remote=> true, method: :post) do%>
+          <input type='hidden' name='confirm[problem_id]' value="<%=problem.id%>">
+          <div class="like-unlike">
+            <div class="like">
+              <button name=confirm[confirmed] value=true><i class="far fa-thumbs-up"
+                  onclick="handleLike()"></i></button>
+              <span>
+                <%=Confirm.where(:problem_id=>problem.id,:confirmed=>true).count%>
+              </span>
+            </div>
+            <div>
+              <button name=confirm[confirmed] value=false onclick="handleLike()">
+                <i class="far fa-thumbs-down"></i></button>
+              <span>
+                <%=Confirm.where(:problem_id=>problem.id,:confirmed=>false).count%>
+              </span>
+            </div>
+          </div>
+        <% end %>
+      <%end%>
+    </div>
+    <div class="submitted-issue-details-comment">
+      <div class="details">Issue Details <i class="fa fa-caret-down details-down2" aria-hidden="true"> </i> </div>
+      <div class="submitted-issue-details">
+        <div class="h6 details2">Issue Details</div>
+        <div class="blog-table">
+          <div class="issue_info_parts">
+            <div class="h6">Location:</div>
+            <div class="blog-card-description">
+              <span>Governorate:</span>
+              <%@city=City.where(:id=>problem.city_id)%>
+              <% @city.each do |city| %>
+                <%@gove=Governorate.where(:id=>city.governorate_id)%>
+                  <% @gove.each do |gove| %>
+                    <span>
+                      <%=gove.name%>
+                    </span>
+                  <% end %>
+              <% end %>
+            </div>
+            <div class="blog-card-description">
+              <span>City:</span>
+              <% @city.each do |city| %>
+                <span>
+                  <%=city.name%>
+                </span>
+                <%end%>
+            </div>
+          </div>
+          <div class="issue_info_parts">
+            <div class="h6">Description</div>
+            <p class="blog-card-description">
+              <%=problem.desciption%>
+            </p>
+          </div>
+          <div class="issue_info_parts">
+            <div class="h6">Status</div>
+            <p class="blog-card-description">
+              <%=problem.status%>
+            </p>
+          </div>
+          <div class="issue_info_parts">
+            <div class="h6">Submitted by:</div>
+            <div class="blog-card-description">
+              <span>user:</span>
+              <%@submiter=User.where(:id=> problem.user_id)%>
+              <% @submiter.each do |user| %>
+                <span>
+                  <%= link_to "#{user.first_name} #{user.last_name}" ,personal_page_user_path(user),:class=>"link-dark" %>
+                </span>
+              <% end %>
+            </div>
+          </div>
+          
+          
+        </div>
+      </div>
+      <%= form_tag({:controller=>'sessions',:action=>'comment'},:remote=> true, :local=> true, html: {:id => "post-com" },method: :post) do%>
+        <input type='hidden' name='feed[problem_id]' value="<%=problem.id%>">
+        <div class="instagram-card-footer">
+          <div class="model-container" tabindex="-1">
+            <div class="comments-model">
+                <div class="instagram-card-header2">
+                  <% @submiter = User.where(:id=> problem.user_id)%>
+                  <% @submiter.each do |user| %>
+                    <%if @photos=Photo.where(:user_id=>user.id).present?%>
+                      <%@photos= Photo.where(:user_id=>user.id)%>
+                        <% @photos.each do |photo| %>
+                          <% if (photo.image.attached?) %>
+                            <%=image_tag(url_for(photo.image),class:'instagram-card-user-image')%>
+                          <% else %>
+                            <%=image_tag('avatar.png',class:'instagram-card-user-image')%>
+                          <% end %>
+                        <% end %>
+                    <% else %>
+                      <%=image_tag('avatar.png',class:'instagram-card-user-image')%>
+                    <% end %>
+                      <div class="instagram-card-user-name h5">
+                        <%=user.first_name%>
+                        <%=user.last_name%>
+                      </div>
+                  <%end%>
+                </div>
+                <div class="border-header"></div>
+                <%@comments=Coment.where(:problem_id=>problem.id).order("id DESC")%>
+                <div class="users-comments">
+                  <%@comments.each do |com|%>
+                    <div class="cmt">
+                      <%user=User.where(:id=>com.user_id)%>
+                      <%user.each do |user|%>
+                        <% if @photos=Photo.where(:user_id=>user.id).present?%>
+                          <%@photos=Photo.where(:user_id=>user.id)%>
+                          <% @photos.each do |photo| %>
+                            <% if (photo.image.attached?) %>
+                              <%=image_tag(url_for(photo.image),class:'instagram-card-user-image')%>
+                            <% else %>
+                                  <%=image_tag('avatar.png',class:'instagram-card-user-image')%>
+                            <% end %>
+                          <% end %>
+                        <% else %>
+                          <%=image_tag('avatar.png',class:'instagram-card-user-image')%>
+                        <% end %>
+                        <div class="instagram-card-user-name">
+                          <%=user.first_name%>
+                          <%=user.last_name%>
+                        </div>
+                      <%end%>
+                        <div class="cmt-txt">
+                          <%=com.comment%>
+                        </div>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="instagram-card-footer">
+                  <%= form_tag({:controller=>'sessions',:action=>'comment'},:remote=> true, method: :post) do%>
+                    <input type='hidden' name='feed[problem_id]' value="<%=problem.id%>">
+                    <div>
+                      <input name=feed[comment] class="comments-input blog-text-success" id="enter-comment"type="text" placeholder="Add a comment..." autocomplete="off"/>
+                      <input type=submit class="btn btn-outline-info post_cmt btn-post" id="post-comment"value=Post>
+                    </div>
+                  <% end %>
+                </div>
+            <i class="fas fa-times close"></i>
+            </div>
+          </div>
+          <button id="open" class=open>
+            <span> View all </span> 
+            <span id=number-cmt> 
+              <%=Coment.where(:problem_id=>problem.id).count%> 
+            </span>
+            <span> comments </span>
+          </button>
+          <div>
+            <%= form_tag({:controller=>'sessions',:action=>'comment'},:remote=> true, method: :post) do%>
+              <input type='hidden' name='feed[problem_id]' value="<%=problem.id%>">
+              <input name=feed[comment] class="comments-input blog-text-success" id="enter-comment" type="text"
+                placeholder="Add a comment..." autocomplete="off"/>
+              <button class="btn btn-outline-info post_cmt" id="post-comment" onclick="post" >Post</button>
+          <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<%end%>
+<a class="border rounded d-inline scroll-to-top" href="" style="margin-right: 60px;">
+  <i class="fas fa-angle-up"></i>
+</a>
+<a class="d-inline scroll-to-top" href="/submit_issue">
+  <button class="btn btn-primary add-issue" type="button" data-toggle="modal"
+    data-target="#submit_issue"><i class="fa fa-plus"></i></button>
+<a>
+
+<script>
+  $(function () {
+    $(".details").click(function(){
+      if($(this).children("i").hasClass("fa-caret-down")){
+        $(".submitted-issue-details").slideUp(300)
+        $(".details").children("i").removeClass("fa-caret-up")
+        $(".details").children("i").addClass("fa-caret-down")
+        $(this).siblings(".submitted-issue-details").slideDown(300);
+        $(this).children("i").removeClass("fa-caret-down")
+        $(this).children("i").addClass("fa-caret-up")
+      } else if($(this).children("i").hasClass("fa-caret-up")){
+        $(this).siblings(".submitted-issue-details").slideUp(300);
+        $(this).children("i").removeClass("fa-caret-up")
+        $(this).children("i").addClass("fa-caret-down")
+      }
+    })
+    $('.open').click(function () {
+      $(this).siblings('.model-container').delay(2000).css('transform', ' scale(1)')
+    });
+    $('body').on('click', '.close', function () {
+      $('.model-container').css('transform', ' scale(0)')
+    });
+  $('button').submit(function(e){
+    $("input[name = comment]").enabled = enabled;
+    e.preventDefault();
+    return false;
+  })
+  $(window).resize(function(){
+      if($(window).width()<760){
+      $('.instagram-card').removeClass("mb-3");
+    }
+  });
+});
+</script>

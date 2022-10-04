@@ -1,0 +1,95 @@
+<%= stylesheet_link_tag 'submit_issue'%>
+
+<!-- <%= form_tag '/new_problem', :method =>'get' do%>
+    <%= select_tag :id,options_from_collection_for_select(Governorate.all.order(:name),
+      :id, :name, params[:id]), id: "different_option_value_html", 
+      onchange: "this.form.submit();", include_blank: "",class:"form-select form-select"%>
+<%end%> -->
+<style>
+  
+</style>
+<div class="container">
+  <%= form_with(model: problem ,class:"container-form") do |form| %>
+  <% if problem.errors.any? %>
+    <div id="error_explanation">
+      <h2 class=h2><%= pluralize(problem.errors.count, "error") %> pleases enter the image</h2>
+      <ul>
+        <% problem.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="choose-photo-form">
+    <div class="select-photo custom-file">
+        <div class="form-label custom-file-input" id="formFile" onchange="preview()"><%= form.file_field :image %></div>
+        <label class="custom-file-label">Choose Image</label>
+    </div>
+    <%=image_tag('image-preview2.png', :id=>"frame", :class=>"img-preview", :name=>"image")%>
+  </div>
+  <div class="issueInfo">
+    
+    <div class="issueInfoParts  mb-3 state-city" title="if you want to submit issue in another state, go change your location in your profile">
+        <label>State</label>
+        <%=@gover.name %>
+    </div>
+      
+    <div class="issueInfoParts mb-3 state-city" title="if you want to submit issue in another city, please go change your city in your profile">
+      <label>City</label>
+      <%=@city.name%>
+      <input type=hidden name="problem[city_id]" value=" <%=@city.id%>">
+    </div>
+    
+    <div class="issueInfoParts  mb-3">
+      <div id="floating-label-1" class="form-floating">
+        <select class="form-control"name="problem[area_id]"  for="floatinginput" placeholder="HGsOFT" required >
+            <option ></option>
+              <% @area.each do |ct| %>
+                <option value="<%=ct.id%>">
+                      <%=ct.name%>
+                </option>
+            <% end %>
+        </select>
+        <label class="form-label" id="floating-label-2" for="floatinginput">Select Area</label>
+      </div>
+    </div>
+    
+    <div class="issueInfoParts  mb-3">
+      <div id="floating-label-1" class="form-floating">
+        <input type="text" name=problem[addrees] class="form-control" for="floatinginput" required>
+        <label class="form-label" id="floating-label-2">Add Address</label>
+
+      </div>
+    </div>
+
+    <div class="issueInfoParts  mb-3">
+      <div id="floating-label-1" class="form-floating">
+        <%@cat=Category.all%>
+        <select class="form-control" name="problem[category_id]" for="floatinginput" placeholder=""  required>
+            <option ></option>
+            <% @cat.each do |ct| %>
+                <option value="<%=ct.id%>">
+                      <%=ct.name%>
+                </option>
+            <% end %>
+        </select>
+        <label class="form-label" id="floating-label-2" for="floatinginput">Select Category</label>
+      </div>
+    </div>
+    
+    <div class="issueInfoParts  mb-3">
+      <div id="floating-label-1" class="form-floating">
+        <%= form.text_area :desciption, label: "description",class:"form-control" ,placeholder:"" ,rows:"5" ,cols:"22" %>
+        <label class="form-label" id="floating-label-2" for="floatinginput">Add Description...</label>
+      </div>
+    </div>
+    <button class="btn btn-primary submit-issue" type="submit">Submit Issue</button>
+  </div>
+<% end %>
+</div>
+
+<script>
+  function preview() {
+    frame.src = URL.createObjectURL(event.target.files[0]);
+  }
+</script>
