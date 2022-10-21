@@ -6,7 +6,12 @@
 .instagram-card span {
 	font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-
+.change-supervisor{
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	justify-content: space-between;
+}
 .instagram-card {
 	width: auto;
 	display: flex;
@@ -178,8 +183,8 @@ hr {
 	align-items: flex-start;
 }
 @media
-only screen 
-and (max-width: 760px), (min-device-width: 768px) 
+only screen
+and (max-width: 760px), (min-device-width: 768px)
 and (max-device-width: 1024px) {
   .issue-inprogres-card{
 	width:auto;
@@ -188,7 +193,7 @@ and (max-device-width: 1024px) {
 	width:100%;
 	// padding: 100%;
 
-	
+
   }
   .issue-img-group-sections{
 	display:block;
@@ -196,7 +201,7 @@ and (max-device-width: 1024px) {
  .blog-table{
   /* margin-top:100%; */
   padding-bottom: 20px;
-  
+
  }
  .groups-section{
 	padding-right: 50%;
@@ -206,7 +211,7 @@ and (max-device-width: 1024px) {
  }
  .btn1{
 	display: block;
-	
+
  }
  .btn2{
 	display: block;

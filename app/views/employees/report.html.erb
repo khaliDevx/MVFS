@@ -85,7 +85,13 @@
       <% for i in @users%>
         <tr>
           <td><%= i.first_name%> <%= i.last_name%></td>
-          <td><%= AcceptMoney.where(:sup_id=>i.id).count%></td>
+          <%mony= AcceptMoney.where(:sup_id=>i.id)%>
+          <% for i in mony do%>
+            <%total=0%>
+            <%total +=i.amount%>
+          <%end%>
+
+          <td><%=total%></td>
           <td><%= AcceptMat.where(:sup_id=>i.id).count%></td>
           <td><%= Problem.where(:user_id=>i.id).count%></td>
           <td><%= JoinIssue.where(:user_id=>i.id).count%></td>

@@ -17,7 +17,7 @@
     <div class="card shadow-lg o-hidden border-0 my-5">
         <div class="card-body">
             <div class="text-center">
-                <h4 class="text-dark mb-4">Create an Account</h4>
+                <h4 class="text-dark mb-4">Sign Up</h4>
             </div>
             <form class="user needs-validation" action="/user" method="POST" novalidate>
                 <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
@@ -39,7 +39,7 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col mb-3">
-                        <input class="form-control form-control-user" type="text" 
+                        <input class="form-control form-control-user" type="text"
                             aria-describedby="emailHelp" placeholder="Username" name="user[username]"
                             autocomplete="off" required>
                             <div class="invalid-feedback">
@@ -47,7 +47,7 @@
                             </div>
                     </div>
                     <div class="col-sm-6">
-                        <input class="form-control form-control-user" type="number" 
+                        <input class="form-control form-control-user" type="number"
                             placeholder="Phone Number" name="user[phone]" autocomplete="off" required>
                         <div class="invalid-feedback">
                                 please enter your phone number!
@@ -151,9 +151,9 @@
         if(password_length<8)
         {
             $('.password-message').text('password must be greater than 8 charachters!').addClass('error-message');
-            
+
         }else
-        {   
+        {
             $('.password-message').text('good password').removeClass('error-message');
             $('.password-message').text('good password').addClass('success-message');
 
@@ -167,12 +167,12 @@
             {
                 $('.confirm-message').text('Password Match!').addClass('success-message');
             }
-            
+
             else{
                 $('.confirm-message').text("Password Doesn't Match!").addClass('error-message');
             }
         }
-        
+
 
     });
 })()

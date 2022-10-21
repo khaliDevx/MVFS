@@ -1,15 +1,14 @@
 Rails.application.routes.draw do
-  get 'admin/add_emoployee'
   resources :fixed_issues
   resources :photos
-  resources :employees 
+  resources :employees
   resources :users do
     member do
       get :personal_page
       get :support
     end
   end
-  resources :problems do 
+  resources :problems do
     member do
       get :accept
     end
@@ -19,7 +18,7 @@ Rails.application.routes.draw do
   post "/acce_matt", to: "problems#accept_mat"
   post "/accept", to: "problems#accept_issue"
   get "/accept", to: "problems#accept"
-  
+
   get "/submit", to: "problems#new"
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
@@ -41,6 +40,7 @@ Rails.application.routes.draw do
   post "/problem", to: "employees#update"
   get "/issue", to: "employees#issue"
   get "/new_user", to: "sessions#new_user"
+  # post "/employee", to: "sessions#create_user"
   get "/user", to: "employees#user"
   get "/profile", to: "users#profile"
   post "/upprofile", to: "users#update_profile"
@@ -97,12 +97,11 @@ Rails.application.routes.draw do
   get '/fixed_issue',to: 'fixed_issues#index'
   #repoorts
   get '/report', to: 'employees#report'
-  ##area
-  post '/area',to: 'additions#create_area'
-  ## admins
-  get '/add_emoployee',to: 'admin#add_emoployee'
-  post "/employee", to: "admin#create"
-
+  ## change the suppervisor
+  post '/chang', to: 'users#changesuper'
+  post '/reject', to: 'users#rejectsup'
+  post '/yes', to: 'users#conirmsup'
+  get '/accept_requst', to: 'users#accept_requst'
   resources :users do
     member do
       patch :accept

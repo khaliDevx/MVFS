@@ -1,0 +1,62 @@
+<%= stylesheet_link_tag 'index' %>
+
+<style>
+    .issue-img{
+        width: 300px;
+        height: 300px;
+    }
+    .name{
+        font-size: 25px;
+    }
+    .request-title{
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+    }
+    .request-title span{
+        font-size: 20px;
+    }
+    .accept-reject{
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+    }
+</style>
+<div class="container container-fluid shadow p-2 mb-5 bg-white rounded w-50">
+    <% if User.find_by(:id=>session[:user_id]).message==true%>
+        <div class="">
+            <div class="m-2 pb-3 border-bottom">
+                <%join = JoinIssue.find_by(:user_id=>session[:user_id],:status=>true)%>
+                <%issue = Problem.find_by(:id=>join.problem_id)%>
+                <%accept = Accept.find_by(:problem_id=> join.problem_id)%>
+                <h3 class="request-title">
+                    <strong class="name">
+                        <%= User.find_by(:id=>accept.user_id).first_name%>
+                        <%= User.find_by(:id=>accept.user_id).last_name%>
+                    </strong>
+                    <span>
+                        Request you to be supervisor
+                    </span>
+                </h3>
+            </div>
+            <div class="form-group m-3">
+                <h5>do you want to be supervisor?<h5>
+                <div class="accept-reject">
+                    <form action=/yes method=POST class="m-2">
+                        <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                        <input type='hidden' name='yes[user_id]'value='<%=session[:user_id]%>'>
+                        <button class="btn btn-primary">Confirm</button>
+                    </form>
+                    <form action=/reject method=POST class="m-2">
+                        <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                        <input type='hidden' name='reject[user_id]'value='<%=session[:user_id]%>'>
+                        <button class="btn btn-warning">Reject</button>
+                    </form>
+                </div>
+            <div>
+            <div class="m-2">
+                <%= image_tag(issue.image, class: "issue-img intagram-card-image")%>
+            </div>
+        </div>
+    <%end%>
+</div>

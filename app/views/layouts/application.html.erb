@@ -27,8 +27,8 @@
         color:  #106eea;
     }
     @media
-    only screen 
-    and (max-width: 760px), (min-device-width: 768px) 
+    only screen
+    and (max-width: 760px), (min-device-width: 768px)
     and (max-device-width: 1024px){
     .user-navs-mobile{
         float: right;
@@ -92,7 +92,7 @@
                     <li class="nav-item"> <a class="nav-link" href="/addition">
                     <i class="fas fa-plus "></i><span>Additions</span>
                         </a>
-                    </li> 
+                    </li>
                      <li class="nav-item">
                             <a class="nav-link" href="/issue">
                                 <i class="fas fa-camera"></i>
@@ -124,8 +124,8 @@
                                 <span>Fixed Issue</span>
                             </a>
                     </li>
-                    
-                  
+
+
                 </ul>
                 <div class="text-center d-none d-md-inline">
                     <button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button>
@@ -156,8 +156,10 @@
                                                 <i class="fas fa-bell fa-fw"></i>
                                                 <div style="color:red;font-size: 10px;"><%=Problem.where(:status=>"Submitted").count %></div>
                                             <%end%>
-                                        <%else%>
+                                            <%u = User.find_by(:id=>session[:user_id],:message=>true)%>
+                                        <% elsif  u = User.find_by(:id=>session[:user_id],:message=>true)%>
                                             <i class="fas fa-bell fa-fw"></i>
+                                                <div style="color:red;font-size: 10px;">1</div>
 
                                         <%end%>
                                     </a>
@@ -179,14 +181,30 @@
                                             </div>
                                         </a>
                                         <% end %>
+                                        <%elsif u.present?%>
+                                        <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+                                            <h6 class="dropdown-header">alerts center</h6>
+
+                                            <a class="dropdown-item d-flex align-items-center" href="/accept_requst">
+                                                <div class="me-3">
+                                                    <div class="bg-primary icon-circle">
+
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <span class="small text-gray-500"></span>
+                                                    <p>Request you to be supervisor </p>
+                                                </div>
+                                            </a>
+
                                         <%else%>
                                          <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
                                         <h6 class="dropdown-header">alerts center</h6>
-                                        
+
                                         <a class="dropdown-item d-flex align-items-center" href="">
                                             <div class="me-3">
                                                 <div class="bg-primary icon-circle">
-                                                  
+
                                                 </div>
                                             </div>
                                             <div>
@@ -194,7 +212,7 @@
                                                 <p></p>
                                             </div>
                                         </a>
-                                        
+
                                         <%end%>
                                         <%# <a class="dropdown-item text-center small text-gray-500" href="#">Show All
                                             Alerts</a> %>
@@ -215,19 +233,19 @@
       			                                            		<% if (photo.image.attached?) %>
       			                                            		  <%=image_tag(url_for(photo.image),class:'border rounded-circle img-profile')%>
       			                                            		<% else %>
-                                                                		<%=image_tag('avatar.png',class:'border rounded-circle img-profile')%> 
+                                                                		<%=image_tag('avatar.png',class:'border rounded-circle img-profile')%>
       			                                            		<% end %>
 				                                            	    <% end %>
 				                                    <% else %>
-                                                                <%=image_tag('avatar.png',class:'border rounded-circle img-profile')%> 
+                                                                <%=image_tag('avatar.png',class:'border rounded-circle img-profile')%>
 				                                    <% end %>
                                     </a>
 
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
-                                        
+
                                             &nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;<%= link_to "Profile", personal_page_user_path(user),:class=>"link-dark " %>
                                         <div class="dropdown-divider"></div>
-                                    
+
                                         <%if user.supervisor==true%>
                                         <a class="dropdown-item" href="/supervisor">
                                             <i class="fas fa-home fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;In Progress
@@ -236,7 +254,7 @@
                                         <a class="dropdown-item" href="/log_out">
                                             <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout
                                         </a>
-                                       
+
 
                                     <% end %>
                                     </div>
@@ -250,23 +268,23 @@
     (function () {
         "use strict";
         var e = document.querySelector(".sidebar"), o = document.querySelectorAll("#sidebarToggle, #sidebarToggleTop");
-        if (e) { 
-            e.querySelector(".collapse"); 
-            var t = [].slice.call(document.querySelectorAll(".sidebar .collapse")).map((function (e) { 
-                return new bootstrap.Collapse(e, { toggle: !1 }) 
+        if (e) {
+            e.querySelector(".collapse");
+            var t = [].slice.call(document.querySelectorAll(".sidebar .collapse")).map((function (e) {
+                return new bootstrap.Collapse(e, { toggle: !1 })
             }));
-            for (var l of o) l.addEventListener("click", (function (o) { 
-                if (document.body.classList.toggle("sidebar-toggled"), e.classList.toggle("toggled"), e.classList.contains("toggled")) 
-                for (var l of t) l.hide() 
-            })); 
+            for (var l of o) l.addEventListener("click", (function (o) {
+                if (document.body.classList.toggle("sidebar-toggled"), e.classList.toggle("toggled"), e.classList.contains("toggled"))
+                for (var l of t) l.hide()
+            }));
             window.addEventListener("resize", (function () {
-                if (Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) < 768) 
-                for (var e of t) e.hide() })) 
-        } 
-        var i = document.querySelector(".scroll-to-top"); 
-        i && window.addEventListener("scroll", (function () { 
-            var e = window.pageYOffset; 
-            i.style.display = e > 100 ? "block" : "none" 
+                if (Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) < 768)
+                for (var e of t) e.hide() }))
+        }
+        var i = document.querySelector(".scroll-to-top");
+        i && window.addEventListener("scroll", (function () {
+            var e = window.pageYOffset;
+            i.style.display = e > 100 ? "block" : "none"
         }))
 
         // Denotes total number of rows
@@ -274,7 +292,7 @@
         // jQuery button click event to add a row
         $('#addBtn').on('click', function () {
             // Adding a row inside the tbody.
-            
+
             $('#materials-list').append(`<tr id="R${++rowIdx}">
                 <td class="row-index text-center">
                     <%= select_tag :material_id,options_from_collection_for_select(Material.all.order(:name), :id, :name,params[:material_id]), class:"selectt-mat", include_blank: "Choose the material?" %>
@@ -330,7 +348,7 @@
             // Decreasing total number of rows by 1.
             rowIdx--;
         });
-        
+
     })()
 </script>
 </body>

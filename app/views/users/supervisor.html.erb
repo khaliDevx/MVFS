@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag 'supervisor' %>
 <%= stylesheet_link_tag 'join' %>
 <style>
-  
+
 </style>
 <div class="">
 
@@ -38,7 +38,7 @@
               <div class="supporters-list blog-card-description">
                 <div class="suporter">
                   <div>
-                  
+
                     <% @supportm = SupportedMoney.where(:problem_id=> problem.id)%>
                     <%@support_mat = MaterialSupporet.where(:problem_id=>problem.id)%>
                     <%@supportm.each do |sup|%>
@@ -92,7 +92,22 @@
               </div>
             </div>
             <div class="groups-section">
-              <div class="">My Team</div>
+              <div class="h-50 w-100 change-supervisor">
+                <form action=/chang method=POST>
+                  <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>">
+                        <select name=chang[user_id] class="form-control w-auto my-2">
+                          <option>Select Volunteer</option>
+                            <% join= JoinIssue.where(:problem_id=>problem.id)%>
+                                <% join.each do |join| %>
+                                <option value='<%=join.user_id%>'><%=User.find_by(:id=>join.user_id).first_name %></option>
+
+                              <%end%>
+
+                        </select>
+                    <button class="btn btn-info">change supervisor</button>
+                </form>
+                <div class="m-3">My Team</div>
+              </div>
               <div class="blog-card-description">
                 <div class="">
                   <div>
@@ -150,11 +165,11 @@
                   <button  class="btn btn-outline-info" disabled>
                     Support completed
                       <i class="fa-solid fa-circle-check"></i>
-                  </button> 
+                  </button>
                   <% else %>
                      <button  class="btn btn-outline-info" >
                         Support completed
-                  </button> 
+                  </button>
                 <% end %>
                 <%end%>
               </div>
@@ -190,7 +205,7 @@
                     <% end %>
                 </div>
                 <div class="matt">
-                   
+
                     <%= form_tag({:controller=>'users',:action=>'accept_mat'},:remote=> true, method: :post) do%>
 
                       <%# <input type='hidden' name='authenticity_token' value="<%= form_authenticity_token%>
@@ -313,7 +328,7 @@
   <button class="btn btn-primary add-issue fa fa-plus" type="button" data-toggle="modal"
     data-target="#submit_issue">
   </button>
- <a> 
+ <a>
 <script>
   $(function(){
     $('#recieve').click(function(){
@@ -327,7 +342,7 @@
     });
     $('body').on('click','.close',function(){
       $('.model-container2').css('transform',' scale(0)')
-    });    
+    });
     $('.off').click(function(){
               $('.money').hide()
               $('.matt').show()
